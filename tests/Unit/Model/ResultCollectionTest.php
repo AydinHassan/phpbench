@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the PHPBench package
+ *
+ * (c) Daniel Leech <daniel@dantleech.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace PhpBench\Tests\Unit\Model;
 
 use PhpBench\Model\Result\MemoryResult;
@@ -24,7 +33,7 @@ class ResultCollectionTest extends \PHPUnit_Framework_TestCase
     public function testAddConstructor()
     {
         $collection = new ResultCollection([
-            $expected = new TimeResult(10)
+            $expected = new TimeResult(10),
         ]);
 
         $result = $collection->getResult(TimeResult::class);
@@ -46,7 +55,7 @@ class ResultCollectionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * It should throw an exception if two results of the same class are added.
-     * 
+     *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Result of class "PhpBench\Model\Result\TimeResult" has already been set.
      */

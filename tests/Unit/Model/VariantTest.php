@@ -12,14 +12,11 @@
 namespace PhpBench\Tests\Unit\Benchmark;
 
 use PhpBench\Model\Iteration;
-use PhpBench\Model\ResultCollection;
 use PhpBench\Model\ParameterSet;
 use PhpBench\Model\Subject;
 use PhpBench\Model\Variant;
-use Prophecy\Argument;
-use PhpBench\Model\Result\MemoryResult;
-use PhpBench\Model\Result\TimeResult;
 use PhpBench\Tests\Util\TestUtil;
+use Prophecy\Argument;
 
 class VariantTest extends \PHPUnit_Framework_TestCase
 {

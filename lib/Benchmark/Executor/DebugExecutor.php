@@ -14,10 +14,10 @@ namespace PhpBench\Benchmark\Executor;
 use PhpBench\Benchmark\Metadata\SubjectMetadata;
 use PhpBench\Benchmark\Remote\Payload;
 use PhpBench\Model\Iteration;
-use PhpBench\Model\ResultCollection;
-use PhpBench\Registry\Config;
 use PhpBench\Model\Result\MemoryResult;
 use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\ResultCollection;
+use PhpBench\Registry\Config;
 
 /**
  * This executor for testing purposes. It always returns constant times, it
@@ -53,7 +53,7 @@ class DebugExecutor extends BaseExecutor
             $time = $time + $spreadDiff;
         }
 
-        return new ResultCollection([ new TimeResult($time), new MemoryResult($memory) ]);
+        return new ResultCollection([new TimeResult($time), new MemoryResult($memory)]);
     }
 
     /**

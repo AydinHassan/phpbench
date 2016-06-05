@@ -19,10 +19,10 @@ use PhpBench\Benchmark\Remote\Launcher;
 use PhpBench\Model\Benchmark;
 use PhpBench\Model\Iteration;
 use PhpBench\Model\ParameterSet;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
 use PhpBench\Model\Variant;
 use PhpBench\Registry\Config;
-use PhpBench\Model\Result\TimeResult;
-use PhpBench\Model\Result\MemoryResult;
 
 class MicrotimeExecutorTest extends \PHPUnit_Framework_TestCase
 {

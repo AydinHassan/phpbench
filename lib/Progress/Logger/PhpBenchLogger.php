@@ -13,12 +13,12 @@ namespace PhpBench\Progress\Logger;
 
 use PhpBench\Console\OutputAwareInterface;
 use PhpBench\Model\Iteration;
+use PhpBench\Model\Result\TimeResult;
 use PhpBench\Model\Suite;
 use PhpBench\Model\Variant;
 use PhpBench\PhpBench;
 use PhpBench\Util\TimeUnit;
 use Symfony\Component\Console\Output\OutputInterface;
-use PhpBench\Model\Result\TimeResult;
 
 abstract class PhpBenchLogger extends NullLogger implements OutputAwareInterface
 {

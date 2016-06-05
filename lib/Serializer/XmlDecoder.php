@@ -16,15 +16,15 @@ use PhpBench\Environment\Information;
 use PhpBench\Model\Benchmark;
 use PhpBench\Model\Error;
 use PhpBench\Model\ParameterSet;
+use PhpBench\Model\Result\ComputedResult;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\ResultCollection;
 use PhpBench\Model\Subject;
 use PhpBench\Model\Suite;
 use PhpBench\Model\SuiteCollection;
 use PhpBench\Model\Variant;
 use PhpBench\PhpBench;
-use PhpBench\Model\ResultCollection;
-use PhpBench\Model\Result\MemoryResult;
-use PhpBench\Model\Result\TimeResult;
-use PhpBench\Model\Result\ComputedResult;
 
 /**
  * Encodes the Suite object graph into an XML document.
@@ -205,7 +205,7 @@ class XmlDecoder
                         $iterationEl->getAttribute('z-value'),
                         $iterationEl->getAttribute('deviation'),
                         $iterationEl->getAttribute('rejection-count')
-                    )
+                    ),
                 ])
             );
         }

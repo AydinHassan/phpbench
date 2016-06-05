@@ -13,7 +13,6 @@ namespace PhpBench\Model;
 
 use PhpBench\Math\Distribution;
 use PhpBench\Math\Statistics;
-use PhpBench\Model\ResultCollection;
 use PhpBench\Model\Result\ComputedResult;
 
 /**

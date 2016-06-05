@@ -15,11 +15,13 @@ use PhpBench\Benchmark\Executor\BaseExecutor;
 use PhpBench\Benchmark\Remote\Payload;
 use PhpBench\Extensions\XDebug\XDebugUtil;
 use PhpBench\Model\Iteration;
-use PhpBench\Model\IterationResult;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\ResultCollection;
 use PhpBench\PhpBench;
 use PhpBench\Registry\Config;
 
-class ProfileExecutor extends BaseExecutor
+class XDebugExecutor extends BaseExecutor
 {
     /**
      * {@inheritdoc}
@@ -31,11 +33,9 @@ class ProfileExecutor extends BaseExecutor
         $name = XDebugUtil::filenameFromIteration($iteration);
 
         $phpConfig = [
-            'xdebug.trace_output_name' => $name,
-            'xdebug.trace_output_dir' => $outputDir,
-            'xdebug.trace_format' => '1',
-            'xdebug.auto_trace' => '1',
-            'xdebug.coverage_enable' => '0',
+            'xdebug.profiler_enable' => 1,
+            'xdebug.profiler_output_dir' => PhpBench::normalizePath($outputDir),
+            'xdebug.profiler_output_name' => $name,
         ];
 
         if (!extension_loaded('xdebug')) {
@@ -52,24 +52,11 @@ class ProfileExecutor extends BaseExecutor
             ));
         }
 
-        $dom = $this->converter->convert($path);
-        unlink($path);
-
-        $class = $benchmark->getClass();
-        if (substr($class, 0, 1) == '\\') {
-            $class = substr($class, 1);
-        }
-
-        // extract only the timings for the benchmark class, ignore the bootstrapping
-        $selector = '//entry[@function="' . $class . '->' . $subject->getName() . '"]';
-        $time = $dom->evaluate('sum( ' . $selector . '/@end-time) - sum(' . $selector . '/@start-time)') * 1000000;
-        $memory = $dom->evaluate('sum( ' . $selector . '/@end-memory) - sum(' . $selector . '/@start-memory)');
-        $funcCalls = $dom->evaluate('count(' . $selector . '//*)');
-
-        $result = new IterationResult(
-            new Timeresult($time),
-            new MemotyResult($memory)
-        );
+        $result = new ResultCollection([
+            new TimeResult($result['time']),
+            new MemoryResult($result['memory']),
+        ]);
+        $callback($iteration, $result);
 
         return $result;
     }

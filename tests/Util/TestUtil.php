@@ -13,12 +13,12 @@ namespace PhpBench\Tests\Util;
 
 use PhpBench\Environment\Information;
 use PhpBench\Model\ParameterSet;
-use PhpBench\Model\Suite;
-use PhpBench\Model\SuiteCollection;
-use Prophecy\Prophecy\ObjectProphecy;
 use PhpBench\Model\Result\MemoryResult;
 use PhpBench\Model\Result\TimeResult;
 use PhpBench\Model\ResultCollection;
+use PhpBench\Model\Suite;
+use PhpBench\Model\SuiteCollection;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Utility class for configuring benchmarking prophecy objects.
@@ -152,6 +152,6 @@ class TestUtil
 
     public static function createResultCollection($time, $memory = null)
     {
-        return new ResultCollection([ new TimeResult($time), new MemoryResult($memory) ]);
+        return new ResultCollection([new TimeResult($time), new MemoryResult($memory)]);
     }
 }

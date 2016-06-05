@@ -69,7 +69,7 @@ abstract class BaseExecutor implements ExecutorInterface
     }
 
     /**
-     * Launch the payload. This method has to return the ResultCollection
+     * Launch the payload. This method has to return the ResultCollection.
      *
      * @return ResultCollection
      */

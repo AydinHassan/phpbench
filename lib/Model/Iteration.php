@@ -11,10 +11,9 @@
 
 namespace PhpBench\Model;
 
-use PhpBench\Model\ResultCollection;
+use PhpBench\Model\Result\ComputedResult;
 use PhpBench\Model\Result\MemoryResult;
 use PhpBench\Model\Result\TimeResult;
-use PhpBench\Model\Result\ComputedResult;
 
 /**
  * Represents the data required to execute a single iteration.
@@ -122,7 +121,7 @@ class Iteration
     /**
      * Return the time taken (in microseconds) to perform this iteration (or
      * NULL if not yet performed.
-     * 
+     *
      * TODO: Remove this method
      *
      * @return int

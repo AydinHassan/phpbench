@@ -12,10 +12,10 @@
 namespace PhpBench\Tests\Unit\Benchmark;
 
 use PhpBench\Model\Iteration;
-use PhpBench\Model\ResultCollection;
-use PhpBench\Model\Variant;
 use PhpBench\Model\Result\MemoryResult;
 use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\ResultCollection;
+use PhpBench\Model\Variant;
 use PhpBench\Tests\Util\TestUtil;
 
 class IterationTest extends \PHPUnit_Framework_TestCase
@@ -44,7 +44,7 @@ class IterationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetResult()
     {
-        $results = new ResultCollection([ new TimeResult(10), new MemoryResult(15) ]);
+        $results = new ResultCollection([new TimeResult(10), new MemoryResult(15)]);
         $this->iteration->setResults($results);
         $this->assertEquals(10, $this->iteration->getTime());
         $this->assertEquals(15, $this->iteration->getMemory());

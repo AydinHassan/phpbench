@@ -20,15 +20,15 @@ use PhpBench\Benchmark\RunnerContext;
 use PhpBench\Environment\Information;
 use PhpBench\Environment\Supplier;
 use PhpBench\Model\Iteration;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\ResultCollection;
 use PhpBench\Model\Suite;
 use PhpBench\PhpBench;
 use PhpBench\Registry\Config;
 use PhpBench\Registry\ConfigurableRegistry;
 use PhpBench\Tests\Util\TestUtil;
 use Prophecy\Argument;
-use PhpBench\Model\Result\TimeResult;
-use PhpBench\Model\Result\MemoryResult;
-use PhpBench\Model\ResultCollection;
 
 class RunnerTest extends \PHPUnit_Framework_TestCase
 {
@@ -413,7 +413,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
     {
         return new ResultCollection([
             new TimeResult($time),
-            new MemoryResult($memory)
+            new MemoryResult($memory),
         ]);
     }
 }

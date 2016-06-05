@@ -15,9 +15,9 @@ use PhpBench\Benchmark\Executor\DebugExecutor;
 use PhpBench\Benchmark\Metadata\SubjectMetadata;
 use PhpBench\Benchmark\Remote\Launcher;
 use PhpBench\Model\Iteration;
+use PhpBench\Model\Result\TimeResult;
 use PhpBench\Model\Variant;
 use PhpBench\Registry\Config;
-use PhpBench\Model\Result\TimeResult;
 
 class DebugExecutorTest extends \PHPUnit_Framework_TestCase
 {
