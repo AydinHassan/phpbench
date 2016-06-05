@@ -21,6 +21,10 @@ use PhpBench\Model\Suite;
 use PhpBench\Model\SuiteCollection;
 use PhpBench\Model\Variant;
 use PhpBench\PhpBench;
+use PhpBench\Model\ResultCollection;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\Result\ComputedResult;
 
 /**
  * Encodes the Suite object graph into an XML document.
@@ -194,9 +198,15 @@ class XmlDecoder
 
         foreach ($variantEl->query('./iteration') as $iterationEl) {
             $variant->createIteration(
-                $iterationEl->getAttribute('net-time'),
-                $iterationEl->getAttribute('memory'),
-                $iterationEl->getAttribute('rejection-count')
+                new ResultCollection([
+                    new MemoryResult($iterationEl->getAttribute('memory')),
+                    new TimeResult($iterationEl->getAttribute('net-time')),
+                    new ComputedResult(
+                        $iterationEl->getAttribute('z-value'),
+                        $iterationEl->getAttribute('deviation'),
+                        $iterationEl->getAttribute('rejection-count')
+                    )
+                ])
             );
         }
 

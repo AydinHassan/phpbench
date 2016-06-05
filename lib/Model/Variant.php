@@ -13,6 +13,8 @@ namespace PhpBench\Model;
 
 use PhpBench\Math\Distribution;
 use PhpBench\Math\Statistics;
+use PhpBench\Model\ResultCollection;
+use PhpBench\Model\Result\ComputedResult;
 
 /**
  * Stores Iterations and calculates the deviations and rejection
@@ -106,10 +108,10 @@ class Variant implements \IteratorAggregate, \ArrayAccess, \Countable
      *
      * @return Iteration
      */
-    public function createIteration($time, $memory, $rejectionCount = 0)
+    public function createIteration(ResultCollection $results)
     {
         $index = count($this->iterations);
-        $iteration = $iteration = new Iteration($index, $this, $time, $memory, $rejectionCount);
+        $iteration = $iteration = new Iteration($index, $this, $results);
         $this->iterations[] = $iteration;
 
         return $iteration;
@@ -218,19 +220,19 @@ class Variant implements \IteratorAggregate, \ArrayAccess, \Countable
             } else {
                 $deviation = 0;
             }
-            $iteration->setDeviation($deviation);
 
             // the Z-Value represents the number of standard deviations this
             // value is away from the mean.
             $revTime = $iteration->getTime() / $revs;
             $zValue = $this->stats->getStdev() ? ($revTime - $this->stats->getMean()) / $this->stats->getStdev() : 0;
-            $iteration->setZValue($zValue);
 
             if (null !== $retryThreshold) {
                 if (abs($deviation) >= $retryThreshold) {
                     $this->rejects[] = $iteration;
                 }
             }
+
+            $iteration->getResults()->replaceResult(new ComputedResult($zValue, $deviation, $iteration->getRejectionCount()));
         }
 
         $this->computed = true;

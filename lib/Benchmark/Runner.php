@@ -222,14 +222,14 @@ class Runner
     public function runIteration(ExecutorInterface $executor, Config $executorConfig, Iteration $iteration, SubjectMetadata $subjectMetadata)
     {
         $this->logger->iterationStart($iteration);
-        $result = $executor->execute($subjectMetadata, $iteration, $executorConfig);
+        $results = $executor->execute($subjectMetadata, $iteration, $executorConfig);
 
         $sleep = $subjectMetadata->getSleep();
         if ($sleep) {
             usleep($sleep);
         }
 
-        $iteration->setResult($result);
+        $iteration->setResults($results);
         $this->logger->iterationEnd($iteration);
     }
 }

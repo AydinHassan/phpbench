@@ -110,7 +110,7 @@ class BlinkenLoggerTest extends \PHPUnit_Framework_TestCase
     public function testIterationEndStats()
     {
         foreach ($this->variant as $iteration) {
-            $iteration->setResult(TestUtil::createResultCollection(10, 10));
+            $iteration->setResults(TestUtil::createResultCollection(10, 10));
         }
         $this->variant->computeStats();
 

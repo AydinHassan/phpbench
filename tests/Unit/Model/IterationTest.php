@@ -16,6 +16,7 @@ use PhpBench\Model\ResultCollection;
 use PhpBench\Model\Variant;
 use PhpBench\Model\Result\MemoryResult;
 use PhpBench\Model\Result\TimeResult;
+use PhpBench\Tests\Util\TestUtil;
 
 class IterationTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,13 +40,12 @@ class IterationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * It should be possible to set and override the iteration result.
+     * It should be possible to set the iteration result.
      */
     public function testSetResult()
     {
         $results = new ResultCollection([ new TimeResult(10), new MemoryResult(15) ]);
-        $this->iteration->setResult($results);
-        $this->iteration->setResult($results);
+        $this->iteration->setResults($results);
         $this->assertEquals(10, $this->iteration->getTime());
         $this->assertEquals(15, $this->iteration->getMemory());
     }
@@ -55,7 +55,7 @@ class IterationTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRevTime()
     {
-        $iteration = new Iteration(1, $this->variant->reveal(), 100);
+        $iteration = new Iteration(1, $this->variant->reveal(), TestUtil::createResultCollection(100));
         $this->variant->getRevolutions()->willReturn(100);
         $this->assertEquals(1, $iteration->getRevTime());
     }

@@ -123,7 +123,7 @@ class TestUtil
 
                 $time = $baseTime;
                 foreach ($options['iterations'] as $time) {
-                    $variant->createIteration($baseTime  + $time, 200, 0);
+                    $variant->createIteration(self::createResultCollection($baseTime  + $time, 200, 0));
                 }
 
                 $variant->computeStats();

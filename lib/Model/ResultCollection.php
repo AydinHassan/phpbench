@@ -14,7 +14,7 @@ namespace PhpBench\Model;
 /**
  * Represents the result of a single iteration executed by an executor.
  */
-class ResultCollection
+class ResultCollection implements \IteratorAggregate
 {
     private $results;
 
@@ -39,6 +39,11 @@ class ResultCollection
         return $this->results[$class] = $result;
     }
 
+    public function replaceResult(ResultInterface $result)
+    {
+        $this->results[get_class($result)] = $result;
+    }
+
     public function hasResult($class)
     {
         return isset($this->results[$class]);
@@ -54,5 +59,10 @@ class ResultCollection
         }
 
         return $this->results[$class];
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->results);
     }
 }

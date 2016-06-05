@@ -18,6 +18,7 @@ use PhpBench\Model\Variant;
 use PhpBench\PhpBench;
 use PhpBench\Util\TimeUnit;
 use Symfony\Component\Console\Output\OutputInterface;
+use PhpBench\Model\Result\TimeResult;
 
 abstract class PhpBenchLogger extends NullLogger implements OutputAwareInterface
 {
@@ -139,7 +140,7 @@ abstract class PhpBenchLogger extends NullLogger implements OutputAwareInterface
         $outputMode = $subject->getOutputMode();
 
         $time = 0;
-        if (null !== $iteration->getTime()) {
+        if ($iteration->getResults()->hasResult(TimeResult::class)) {
             $time = $iteration->getRevTime();
         }
 

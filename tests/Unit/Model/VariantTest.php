@@ -55,16 +55,16 @@ class VariantTest extends \PHPUnit_Framework_TestCase
     public function testCreateIteration()
     {
         $variant = new Variant($this->subject->reveal(), $this->parameterSet->reveal(), 10, 20);
-        $iteration = $variant->createIteration(10, 20);
+        $iteration = $variant->createIteration(TestUtil::createResultCollection(10, 20));
         $this->assertInstanceOf('PhpBench\Model\Iteration', $iteration);
         $this->assertEquals(10, $iteration->getTime());
         $this->assertEquals(20, $iteration->getMemory());
         $this->assertEquals(0, $iteration->getIndex());
 
-        $iteration = $variant->createIteration(10, 20);
+        $iteration = $variant->createIteration(TestUtil::createResultCollection(10, 20));
         $this->assertEquals(1, $iteration->getIndex());
 
-        $iteration = $variant->createIteration(10, 20);
+        $iteration = $variant->createIteration(TestUtil::createResultCollection(10, 20));
         $this->assertEquals(2, $iteration->getIndex());
     }
 
@@ -77,10 +77,10 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant->spawnIterations(4);
         $this->subject->getRetryThreshold()->willReturn(10);
 
-        $variant[0]->setResult(TestUtil::createResultCollection(4));
-        $variant[1]->setResult(TestUtil::createResultCollection(8));
-        $variant[2]->setResult(TestUtil::createResultCollection(4));
-        $variant[3]->setResult(TestUtil::createResultCollection(16));
+        $variant[0]->setResults(TestUtil::createResultCollection(4));
+        $variant[1]->setResults(TestUtil::createResultCollection(8));
+        $variant[2]->setResults(TestUtil::createResultCollection(4));
+        $variant[3]->setResults(TestUtil::createResultCollection(16));
 
         $variant->computeStats();
 
@@ -115,10 +115,10 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant->spawnIterations(4);
         $this->subject->getRetryThreshold()->willReturn(10);
 
-        $variant[0]->setResult(TestUtil::createResultCollection(4));
-        $variant[1]->setResult(TestUtil::createResultCollection(8));
-        $variant[2]->setResult(TestUtil::createResultCollection(4));
-        $variant[3]->setResult(TestUtil::createResultCollection(16));
+        $variant[0]->setResults(TestUtil::createResultCollection(4));
+        $variant[1]->setResults(TestUtil::createResultCollection(8));
+        $variant[2]->setResults(TestUtil::createResultCollection(4));
+        $variant[3]->setResults(TestUtil::createResultCollection(16));
         $variant->computeStats();
 
         $this->assertCount(3, $variant->getRejects());
@@ -195,7 +195,10 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant = new Variant($this->subject->reveal(), $this->parameterSet->reveal(), 4, 20);
         $variant->spawnIterations(4);
         $this->subject->getRetryThreshold()->willReturn(10);
-        $variant[0]->setResult(TestUtil::createResultCollection(4));
+        $variant[0]->setResults(TestUtil::createResultCollection(4, 10));
+        $variant[1]->setResults(TestUtil::createResultCollection(4, 10));
+        $variant[2]->setResults(TestUtil::createResultCollection(4, 10));
+        $variant[3]->setResults(TestUtil::createResultCollection(4, 10));
         $variant->computeStats();
         $variant->setException(new \Exception('Test'));
         $variant->getStats();
@@ -209,8 +212,8 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant = new Variant($this->subject->reveal(), $this->parameterSet->reveal(), 1, 0);
         $variant->spawnIterations(2);
 
-        $variant[0]->setResult(TestUtil::createResultCollection(4, 100));
-        $variant[1]->setResult(TestUtil::createResultCollection(8, 200));
+        $variant[0]->setResults(TestUtil::createResultCollection(4, 100));
+        $variant[1]->setResults(TestUtil::createResultCollection(8, 200));
 
         $times = $variant->getTimes();
         $memories = $variant->getMemories();

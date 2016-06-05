@@ -14,6 +14,7 @@ namespace PhpBench\Model;
 use PhpBench\Model\ResultCollection;
 use PhpBench\Model\Result\MemoryResult;
 use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\Result\ComputedResult;
 
 /**
  * Represents the data required to execute a single iteration.
@@ -22,12 +23,9 @@ class Iteration
 {
     private $variant;
     private $index;
+    private $results;
 
-    private $time;
-    private $memory;
-    private $deviation;
     private $rejectionCount = 0;
-    private $zValue;
 
     /**
      * @param int $index
@@ -36,19 +34,11 @@ class Iteration
     public function __construct(
         $index,
         Variant $variant,
-        $time = null,
-        $memory = null,
-        $rejectionCount = 0,
-        $deviation = null,
-        $zValue = null
+        ResultCollection $results = null
     ) {
         $this->index = $index;
         $this->variant = $variant;
-        $this->time = $time;
-        $this->memory = $memory;
-        $this->rejectionCount = $rejectionCount;
-        $this->deviation = $deviation;
-        $this->zValue = $zValue;
+        $this->results = $results ?: new ResultCollection();
     }
 
     /**
@@ -75,12 +65,20 @@ class Iteration
     /**
      * Associate the result of the iteration with the iteration.
      *
+     * TODO: Remove this method, just use the ResultCollection object available through ->getResults()
+     *
      * @param int
      */
-    public function setResult(ResultCollection $results)
+    public function setResults(ResultCollection $results)
     {
-        $this->time = $results->getResult(TimeResult::class)->getTime();
-        $this->memory = $results->getResult(MemoryResult::class)->getMemory();
+        foreach ($results as $result) {
+            $this->results->addResult($result);
+        }
+    }
+
+    public function getResults()
+    {
+        return $this->results;
     }
 
     /**
@@ -90,20 +88,7 @@ class Iteration
      */
     public function getDeviation()
     {
-        return $this->deviation;
-    }
-
-    /**
-     * Set the computed deviation of this iteration from other iterations in the same
-     * set.
-     *
-     * NOTE: Should be called by the IterationCollection
-     *
-     * @param int
-     */
-    public function setDeviation($deviation)
-    {
-        $this->deviation = $deviation;
+        return $this->results->getResult(ComputedResult::class)->getDeviation();
     }
 
     /**
@@ -113,17 +98,7 @@ class Iteration
      */
     public function getZValue()
     {
-        return $this->zValue;
-    }
-
-    /**
-     * Set the computed Z-Value for this iteration.
-     *
-     * @param float $zValue
-     */
-    public function setZValue($zValue)
-    {
-        $this->zValue = $zValue;
+        return $this->results->getResult(ComputedResult::class)->getZValue();
     }
 
     /**
@@ -141,38 +116,44 @@ class Iteration
      */
     public function getRejectionCount()
     {
-        return $this->rejectionCount;
+        return $this->results->hasResult(ComputedResult::class) ? $this->results->getResult(ComputedResult::class)->getRejectCount() : 0;
     }
 
     /**
      * Return the time taken (in microseconds) to perform this iteration (or
      * NULL if not yet performed.
+     * 
+     * TODO: Remove this method
      *
      * @return int
      */
     public function getTime()
     {
-        return $this->time;
+        return $this->results->getResult(TimeResult::class)->getTime();
     }
 
     /**
      * Return the memory (in bytes) taken to perform this iteration (or
      * NULL if not yet performed.
      *
+     * TODO: Remove this method.
+     *
      * @return int
      */
     public function getMemory()
     {
-        return $this->memory;
+        return $this->results->hasResult(MemoryResult::class) ? $this->results->getResult(MemoryResult::class)->getMemory() : null;
     }
 
     /**
      * Return the revolution time.
      *
+     * TODO: Remove this method.
+     *
      * @return float
      */
     public function getRevTime()
     {
-        return $this->time / $this->getVariant()->getRevolutions();
+        return $this->getTime() / $this->getVariant()->getRevolutions();
     }
 }
