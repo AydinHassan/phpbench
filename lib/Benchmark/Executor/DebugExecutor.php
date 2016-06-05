@@ -14,8 +14,10 @@ namespace PhpBench\Benchmark\Executor;
 use PhpBench\Benchmark\Metadata\SubjectMetadata;
 use PhpBench\Benchmark\Remote\Payload;
 use PhpBench\Model\Iteration;
-use PhpBench\Model\IterationResult;
+use PhpBench\Model\ResultCollection;
 use PhpBench\Registry\Config;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
 
 /**
  * This executor for testing purposes. It always returns constant times, it
@@ -34,7 +36,7 @@ class DebugExecutor extends BaseExecutor
         $collectionHash = spl_object_hash($iteration->getVariant());
 
         if (!$config['times']) {
-            return new IterationResult(0, $memory);
+            return new ResultCollection([new TimeResult(0), new MemoryResult($memory)]);
         }
 
         if (isset($this->collectionTimes[$collectionHash])) {
@@ -51,7 +53,7 @@ class DebugExecutor extends BaseExecutor
             $time = $time + $spreadDiff;
         }
 
-        return new IterationResult($time, $memory);
+        return new ResultCollection([ new TimeResult($time), new MemoryResult($memory) ]);
     }
 
     /**

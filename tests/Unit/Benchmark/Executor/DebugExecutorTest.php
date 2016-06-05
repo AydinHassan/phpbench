@@ -17,6 +17,7 @@ use PhpBench\Benchmark\Remote\Launcher;
 use PhpBench\Model\Iteration;
 use PhpBench\Model\Variant;
 use PhpBench\Registry\Config;
+use PhpBench\Model\Result\TimeResult;
 
 class DebugExecutorTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,8 +55,8 @@ class DebugExecutorTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        $times = array_map(function ($result) {
-            return $result->getTime();
+        $times = array_map(function ($results) {
+            return $results->getResult(TimeResult::class)->getTime();
         }, $results);
 
         $this->assertEquals($expectedTimes, $times);

@@ -9,12 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace PhpBench\Model;
+namespace PhpBench\Model\Result;
+
+use PhpBench\Model\ResultInterface;
 
 /**
  * Represents the result of a single iteration executed by an executor.
  */
-class IterationResult
+class TimeResult implements ResultInterface
 {
     /**
      * @var int
@@ -22,27 +24,15 @@ class IterationResult
     private $time;
 
     /**
-     * @var int
-     */
-    private $memory;
-
-    /**
      * @param mixed $time Time taken to execute the iteration in microseconds.
-     * @param mixed $memory Memory used by iteration in bytes.
      */
-    public function __construct($time, $memory)
+    public function __construct($time)
     {
         $this->time = $time;
-        $this->memory = $memory;
     }
 
     public function getTime()
     {
         return $this->time;
-    }
-
-    public function getMemory()
-    {
-        return $this->memory;
     }
 }

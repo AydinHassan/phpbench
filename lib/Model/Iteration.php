@@ -11,6 +11,10 @@
 
 namespace PhpBench\Model;
 
+use PhpBench\Model\ResultCollection;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+
 /**
  * Represents the data required to execute a single iteration.
  */
@@ -73,10 +77,10 @@ class Iteration
      *
      * @param int
      */
-    public function setResult(IterationResult $result)
+    public function setResult(ResultCollection $results)
     {
-        $this->time = $result->getTime();
-        $this->memory = $result->getMemory();
+        $this->time = $results->getResult(TimeResult::class)->getTime();
+        $this->memory = $results->getResult(MemoryResult::class)->getMemory();
     }
 
     /**

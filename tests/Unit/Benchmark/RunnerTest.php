@@ -20,13 +20,15 @@ use PhpBench\Benchmark\RunnerContext;
 use PhpBench\Environment\Information;
 use PhpBench\Environment\Supplier;
 use PhpBench\Model\Iteration;
-use PhpBench\Model\IterationResult;
 use PhpBench\Model\Suite;
 use PhpBench\PhpBench;
 use PhpBench\Registry\Config;
 use PhpBench\Registry\ConfigurableRegistry;
 use PhpBench\Tests\Util\TestUtil;
 use Prophecy\Argument;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\ResultCollection;
 
 class RunnerTest extends \PHPUnit_Framework_TestCase
 {
@@ -91,7 +93,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
             ])
         )
             ->shouldBeCalledTimes(count($revs) * array_sum($iterations))
-            ->willReturn(new IterationResult(10, 10));
+            ->willReturn($this->getResultCollection(10, 10));
 
         $suite = $this->runner->run(new RunnerContext(__DIR__, [
             'context_name' => 'context',
@@ -191,9 +193,9 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
         ]);
         TestUtil::configureBenchmarkMetadata($this->benchmark);
 
-        $this->executor->execute($subject1, Argument::cetera())->willReturn(new IterationResult(10, 10));
-        $this->executor->execute($subject2, Argument::cetera())->willReturn(new IterationResult(10, 10));
-        $this->executor->execute($subject3, Argument::cetera())->willReturn(new IterationResult(10, 10));
+        $this->executor->execute($subject1, Argument::cetera())->willReturn($this->getResultCollection(10, 10));
+        $this->executor->execute($subject2, Argument::cetera())->willReturn($this->getResultCollection(10, 10));
+        $this->executor->execute($subject3, Argument::cetera())->willReturn($this->getResultCollection(10, 10));
 
         $suite = $this->runner->run(new RunnerContext(__DIR__));
 
@@ -224,7 +226,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
                 $iteration = $args[1];
                 $test->assertEquals(50, $iteration->getVariant()->getSubject()->getSleep());
 
-                return new IterationResult(10, 10);
+                return $test->getResultCollection(10, 10);
             });
 
         $suite = $this->runner->run(new RunnerContext(__DIR__));
@@ -255,7 +257,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
                 $test->assertEquals(66, $iteration->getVariant()->getWarmup());
                 $test->assertEquals(88, $iteration->getVariant()->getRevolutions());
 
-                return new IterationResult(10, 10);
+                return $test->getResultCollection(10, 10);
             });
 
         $suite = $this->runner->run(new RunnerContext(__DIR__, [
@@ -285,7 +287,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
                 $iteration = $args[1];
                 $test->assertEquals(50, $iteration->getVariant()->getWarmup());
 
-                return new IterationResult(10, 10);
+                return $test->getResultCollection(10, 10);
             });
 
         $suite = $this->runner->run(new RunnerContext(__DIR__, []));
@@ -311,7 +313,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
                 $iteration = $args[1];
                 $test->assertEquals(10, $iteration->getVariant()->getSubject()->getRetryThreshold());
 
-                return new IterationResult(10, 10);
+                return $this->getResultCollection(10, 10);
             });
 
         $suite = $this->runner->run(new RunnerContext(
@@ -386,7 +388,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
         TestUtil::configureBenchmarkMetadata($this->benchmark);
         $this->executor->execute(Argument::type('PhpBench\Benchmark\Metadata\SubjectMetadata'), Argument::type('PhpBench\Model\Iteration'), $this->executorConfig)
             ->shouldBeCalledTimes(1)
-            ->willReturn(new IterationResult(10, 10));
+            ->willReturn($this->getResultCollection(10, 10));
         $suite = $this->runner->run(new RunnerContext(
             __DIR__
         ));
@@ -405,6 +407,14 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
             $errorStack = reset($errorStacks);
             $this->fail('Runner encountered error: ' . $errorStack->getTop()->getMessage());
         }
+    }
+
+    private function getResultCollection($time, $memory)
+    {
+        return new ResultCollection([
+            new TimeResult($time),
+            new MemoryResult($memory)
+        ]);
     }
 }
 

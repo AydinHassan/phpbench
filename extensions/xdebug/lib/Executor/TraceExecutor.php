@@ -19,7 +19,7 @@ use PhpBench\Model\IterationResult;
 use PhpBench\PhpBench;
 use PhpBench\Registry\Config;
 
-class XDebugExecutor extends BaseExecutor
+class ProfileExecutor extends BaseExecutor
 {
     /**
      * {@inheritdoc}
@@ -31,9 +31,11 @@ class XDebugExecutor extends BaseExecutor
         $name = XDebugUtil::filenameFromIteration($iteration);
 
         $phpConfig = [
-            'xdebug.profiler_enable' => 1,
-            'xdebug.profiler_output_dir' => PhpBench::normalizePath($outputDir),
-            'xdebug.profiler_output_name' => $name,
+            'xdebug.trace_output_name' => $name,
+            'xdebug.trace_output_dir' => $outputDir,
+            'xdebug.trace_format' => '1',
+            'xdebug.auto_trace' => '1',
+            'xdebug.coverage_enable' => '0',
         ];
 
         if (!extension_loaded('xdebug')) {
@@ -50,8 +52,24 @@ class XDebugExecutor extends BaseExecutor
             ));
         }
 
-        $result = new IterationResult($result['time'], $result['memory']);
-        $callback($iteration, $result);
+        $dom = $this->converter->convert($path);
+        unlink($path);
+
+        $class = $benchmark->getClass();
+        if (substr($class, 0, 1) == '\\') {
+            $class = substr($class, 1);
+        }
+
+        // extract only the timings for the benchmark class, ignore the bootstrapping
+        $selector = '//entry[@function="' . $class . '->' . $subject->getName() . '"]';
+        $time = $dom->evaluate('sum( ' . $selector . '/@end-time) - sum(' . $selector . '/@start-time)') * 1000000;
+        $memory = $dom->evaluate('sum( ' . $selector . '/@end-memory) - sum(' . $selector . '/@start-memory)');
+        $funcCalls = $dom->evaluate('count(' . $selector . '//*)');
+
+        $result = new IterationResult(
+            new Timeresult($time),
+            new MemotyResult($memory)
+        );
 
         return $result;
     }

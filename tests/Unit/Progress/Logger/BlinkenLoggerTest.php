@@ -19,6 +19,7 @@ use PhpBench\Model\Variant;
 use PhpBench\Progress\Logger\BlinkenLogger;
 use PhpBench\Util\TimeUnit;
 use Symfony\Component\Console\Output\BufferedOutput;
+use PhpBench\Tests\Util\TestUtil;
 
 class BlinkenLoggerTest extends \PHPUnit_Framework_TestCase
 {
@@ -109,7 +110,7 @@ class BlinkenLoggerTest extends \PHPUnit_Framework_TestCase
     public function testIterationEndStats()
     {
         foreach ($this->variant as $iteration) {
-            $iteration->setResult(new IterationResult(10, 10));
+            $iteration->setResult(TestUtil::createResultCollection(10, 10));
         }
         $this->variant->computeStats();
 

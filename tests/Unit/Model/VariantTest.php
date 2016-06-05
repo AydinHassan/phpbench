@@ -12,11 +12,14 @@
 namespace PhpBench\Tests\Unit\Benchmark;
 
 use PhpBench\Model\Iteration;
-use PhpBench\Model\IterationResult;
+use PhpBench\Model\ResultCollection;
 use PhpBench\Model\ParameterSet;
 use PhpBench\Model\Subject;
 use PhpBench\Model\Variant;
 use Prophecy\Argument;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Tests\Util\TestUtil;
 
 class VariantTest extends \PHPUnit_Framework_TestCase
 {
@@ -74,10 +77,10 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant->spawnIterations(4);
         $this->subject->getRetryThreshold()->willReturn(10);
 
-        $variant[0]->setResult(new IterationResult(4, null));
-        $variant[1]->setResult(new IterationResult(8, null));
-        $variant[2]->setResult(new IterationResult(4, null));
-        $variant[3]->setResult(new IterationResult(16, null));
+        $variant[0]->setResult(TestUtil::createResultCollection(4));
+        $variant[1]->setResult(TestUtil::createResultCollection(8));
+        $variant[2]->setResult(TestUtil::createResultCollection(4));
+        $variant[3]->setResult(TestUtil::createResultCollection(16));
 
         $variant->computeStats();
 
@@ -112,10 +115,10 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant->spawnIterations(4);
         $this->subject->getRetryThreshold()->willReturn(10);
 
-        $variant[0]->setResult(new IterationResult(4, null));
-        $variant[1]->setResult(new IterationResult(8, null));
-        $variant[2]->setResult(new IterationResult(4, null));
-        $variant[3]->setResult(new IterationResult(16, null));
+        $variant[0]->setResult(TestUtil::createResultCollection(4));
+        $variant[1]->setResult(TestUtil::createResultCollection(8));
+        $variant[2]->setResult(TestUtil::createResultCollection(4));
+        $variant[3]->setResult(TestUtil::createResultCollection(16));
         $variant->computeStats();
 
         $this->assertCount(3, $variant->getRejects());
@@ -192,7 +195,7 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant = new Variant($this->subject->reveal(), $this->parameterSet->reveal(), 4, 20);
         $variant->spawnIterations(4);
         $this->subject->getRetryThreshold()->willReturn(10);
-        $variant[0]->setResult(new IterationResult(4, null));
+        $variant[0]->setResult(TestUtil::createResultCollection(4));
         $variant->computeStats();
         $variant->setException(new \Exception('Test'));
         $variant->getStats();
@@ -206,8 +209,8 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant = new Variant($this->subject->reveal(), $this->parameterSet->reveal(), 1, 0);
         $variant->spawnIterations(2);
 
-        $variant[0]->setResult(new IterationResult(4, 100));
-        $variant[1]->setResult(new IterationResult(8, 200));
+        $variant[0]->setResult(TestUtil::createResultCollection(4, 100));
+        $variant[1]->setResult(TestUtil::createResultCollection(8, 200));
 
         $times = $variant->getTimes();
         $memories = $variant->getMemories();

@@ -16,6 +16,9 @@ use PhpBench\Model\ParameterSet;
 use PhpBench\Model\Suite;
 use PhpBench\Model\SuiteCollection;
 use Prophecy\Prophecy\ObjectProphecy;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\ResultCollection;
 
 /**
  * Utility class for configuring benchmarking prophecy objects.
@@ -145,5 +148,10 @@ class TestUtil
         }
 
         return new SuiteCollection($suites);
+    }
+
+    public static function createResultCollection($time, $memory = null)
+    {
+        return new ResultCollection([ new TimeResult($time), new MemoryResult($memory) ]);
     }
 }
