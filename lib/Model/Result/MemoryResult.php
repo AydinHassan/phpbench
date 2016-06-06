@@ -24,6 +24,14 @@ class MemoryResult implements ResultInterface
     private $memory;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function fromArray(array $values)
+    {
+        return new self($values['memory']);
+    }
+
+    /**
      * @param mixed $memory Memory used by iteration in bytes.
      */
     public function __construct($memory)
@@ -34,5 +42,20 @@ class MemoryResult implements ResultInterface
     public function getMemory()
     {
         return $this->memory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'memory' => $this->memory,
+        ];
+    }
+
+    public function getKey()
+    {
+        return 'memory';
     }
 }

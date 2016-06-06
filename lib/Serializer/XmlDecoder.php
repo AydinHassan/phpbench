@@ -97,6 +97,20 @@ class XmlDecoder
             $informations[$name] = new Information($name, $info);
         }
 
+        $resultClasses = [];
+        foreach ($suiteEl->query('//result') as $resultEl) {
+            $class = $resultEl->getAttribute('class');
+
+            if (!class_exists($class)) {
+                throw new \RuntimeException(sprintf(
+                    'XML file defines a non-existing result class "%s" - maybe you are missing an extension?',
+                    $class
+                ));
+            }
+
+            $resultClasses[$resultEl->getAttribute('key')] = $class;
+        }
+
         $suite->setEnvInformations($informations);
 
         foreach ($suiteEl->query('./benchmark') as $benchmarkEl) {
@@ -104,21 +118,21 @@ class XmlDecoder
                 $benchmarkEl->getAttribute('class')
             );
 
-            $this->processBenchmark($benchmark, $benchmarkEl);
+            $this->processBenchmark($benchmark, $benchmarkEl, $resultClasses);
         }
 
         return $suite;
     }
 
-    private function processBenchmark(Benchmark $benchmark, \DOMElement $benchmarkEl)
+    private function processBenchmark(Benchmark $benchmark, \DOMElement $benchmarkEl, array $resultClasses)
     {
         foreach ($benchmarkEl->query('./subject') as $subjectEl) {
             $subject = $benchmark->createSubject($subjectEl->getAttribute('name'));
-            $this->processSubject($subject, $subjectEl);
+            $this->processSubject($subject, $subjectEl, $resultClasses);
         }
     }
 
-    private function processSubject(Subject $subject, \DOMElement $subjectEl)
+    private function processSubject(Subject $subject, \DOMElement $subjectEl, array $resultClasses)
     {
         $groups = [];
         foreach ($subjectEl->query('./group') as $groupEl) {
@@ -142,7 +156,7 @@ class XmlDecoder
             $parameterSet = new ParameterSet($index, $parameters);
             $stats = $this->getComputedStats($variantEl);
             $variant = $subject->createVariant($parameterSet, $variantEl->getAttribute('revs'), $variantEl->getAttribute('warmup'), $stats);
-            $this->processVariant($variant, $variantEl);
+            $this->processVariant($variant, $variantEl, $resultClasses);
         }
     }
 
@@ -175,7 +189,7 @@ class XmlDecoder
         return $parameters;
     }
 
-    private function processVariant(Variant $variant, \DOMElement $variantEl)
+    private function processVariant(Variant $variant, \DOMElement $variantEl, array $resultClasses)
     {
         $errorEls = $variantEl->query('.//error');
         if ($errorEls->length) {
@@ -197,17 +211,38 @@ class XmlDecoder
         }
 
         foreach ($variantEl->query('./iteration') as $iterationEl) {
-            $variant->createIteration(
-                new ResultCollection([
-                    new MemoryResult($iterationEl->getAttribute('memory')),
-                    new TimeResult($iterationEl->getAttribute('net-time')),
-                    new ComputedResult(
-                        $iterationEl->getAttribute('z-value'),
-                        $iterationEl->getAttribute('deviation'),
-                        $iterationEl->getAttribute('rejection-count')
-                    ),
-                ])
-            );
+            $results = [];
+
+            foreach ($iterationEl->attributes as $attributeEl) {
+                $name = $attributeEl->name;
+
+                if (isset($resultClasses[$name])) {
+                    $results[$name] = [ $name => $attributeEl->value ];
+                    continue;
+                }
+
+                if (false === strpos($name, '-')) {
+                    // should never happen.
+                    throw new \RuntimeException(sprintf(
+                        'Could not find a Result class for key "%s"',
+                        $name
+                    ));
+                }
+
+                $prefix = substr($name, 0, strpos($name, '-'));
+                $suffix = substr($name, strpos($name, '-') + 1);
+                $results[$prefix][str_replace('-', '_', $suffix)] = $attributeEl->value;
+            }
+
+            $resultCollection = new ResultCollection();
+            foreach ($results as $resultKey => $resultData) {
+                $resultCollection->addResult(call_user_func_array([
+                    $resultClasses[$resultKey],
+                    'fromArray',
+                ], [ $resultData ]));
+            }
+
+            $variant->createIteration($resultCollection);
         }
 
         // TODO: Serialize statistics ..

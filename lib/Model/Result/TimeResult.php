@@ -24,6 +24,14 @@ class TimeResult implements ResultInterface
     private $time;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function fromArray(array $values)
+    {
+        return new self($values['time']);
+    }
+
+    /**
      * @param mixed $time Time taken to execute the iteration in microseconds.
      */
     public function __construct($time)
@@ -34,5 +42,23 @@ class TimeResult implements ResultInterface
     public function getTime()
     {
         return $this->time;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'net-time' => $this->time,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getKey()
+    {
+        return 'time';
     }
 }

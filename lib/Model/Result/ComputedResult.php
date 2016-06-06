@@ -19,6 +19,18 @@ class ComputedResult implements ResultInterface
     private $deviation;
     private $rejectCount;
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function fromArray(array $values)
+    {
+        return new self(
+            $values['z_value'],
+            $values['deviation'],
+            $values['rejection_count']
+        );
+    }
+
     public function __construct($zValue, $deviation, $rejectCount)
     {
         $this->zValue = $zValue;
@@ -39,5 +51,22 @@ class ComputedResult implements ResultInterface
     public function getRejectCount()
     {
         return $this->rejectCount;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'z_value' => $this->zValue,
+            'deviation' => $this->deviation,
+            'rejection_count' => $this->rejectCount,
+        ];
+    }
+
+    public function getKey()
+    {
+        return 'comp';
     }
 }
