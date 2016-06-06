@@ -13,6 +13,7 @@ namespace PhpBench\Extensions\Dbal\Storage\Driver\Dbal;
 
 use Doctrine\DBAL\Connection;
 use PhpBench\Model\Iteration;
+use PhpBench\Model\Result\MemoryResult;
 use PhpBench\Model\SuiteCollection;
 
 class Persister
@@ -96,9 +97,10 @@ class Persister
                         }
 
                         foreach ($variant as $iteration) {
+                            $results = $iteration->getResults();
                             $iterationDatas[] = [
                                 'time' => $iteration->getTime(),
-                                'memory' => $iteration->getMemory(),
+                                'memory' => $results->hasResult(MemoryResult::class) ? $results->getResult(MemoryResult::class)->getMemory() : -1,
                                 'reject_count' => $iteration->getRejectionCount(),
                                 'variant_id' => $variantId,
                             ];

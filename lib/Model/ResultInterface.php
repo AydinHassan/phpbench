@@ -11,8 +11,6 @@
 
 namespace PhpBench\Model;
 
-use PhpBench\Model\ResultInterface;
-
 /**
  * Marker interface for iteration results.
  *
@@ -25,6 +23,7 @@ interface ResultInterface
      * Return a new instance based using the given array values.
      *
      * @param array $array
+     *
      * @return ResultInterface
      */
     public static function fromArray(array $values);

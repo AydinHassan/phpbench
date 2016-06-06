@@ -164,7 +164,7 @@ Difference Between Rows
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 You can show the percentage of difference from the lowest column value in the table by specifying the ``diff`` column. By
-default this will use the ``mean``, you can specify a different value using the ``diff_col`` option, e.g. ``diff_col: "mode"``.
+default this will use the ``mean``, you can specify a different value using the ``deviation_col`` option, e.g. ``deviation_col: "mode"``.
 
 .. code-block:: bash
 

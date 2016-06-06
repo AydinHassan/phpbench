@@ -132,6 +132,18 @@ class Iteration
     }
 
     /**
+     * Return the revolution time.
+     *
+     * TODO: Remove this method.
+     *
+     * @return float
+     */
+    public function getRevTime()
+    {
+        return $this->getTime() / $this->getVariant()->getRevolutions();
+    }
+
+    /**
      * Return the memory (in bytes) taken to perform this iteration (or
      * NULL if not yet performed.
      *
@@ -142,17 +154,5 @@ class Iteration
     public function getMemory()
     {
         return $this->results->hasResult(MemoryResult::class) ? $this->results->getResult(MemoryResult::class)->getMemory() : null;
-    }
-
-    /**
-     * Return the revolution time.
-     *
-     * TODO: Remove this method.
-     *
-     * @return float
-     */
-    public function getRevTime()
-    {
-        return $this->getTime() / $this->getVariant()->getRevolutions();
     }
 }

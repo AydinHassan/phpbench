@@ -16,9 +16,6 @@ use PhpBench\Environment\Information;
 use PhpBench\Model\Benchmark;
 use PhpBench\Model\Error;
 use PhpBench\Model\ParameterSet;
-use PhpBench\Model\Result\ComputedResult;
-use PhpBench\Model\Result\MemoryResult;
-use PhpBench\Model\Result\TimeResult;
 use PhpBench\Model\ResultCollection;
 use PhpBench\Model\Subject;
 use PhpBench\Model\Suite;
@@ -217,7 +214,7 @@ class XmlDecoder
                 $name = $attributeEl->name;
 
                 if (isset($resultClasses[$name])) {
-                    $results[$name] = [ $name => $attributeEl->value ];
+                    $results[$name] = [$name => $attributeEl->value];
                     continue;
                 }
 
@@ -239,7 +236,7 @@ class XmlDecoder
                 $resultCollection->addResult(call_user_func_array([
                     $resultClasses[$resultKey],
                     'fromArray',
-                ], [ $resultData ]));
+                ], [$resultData]));
             }
 
             $variant->createIteration($resultCollection);

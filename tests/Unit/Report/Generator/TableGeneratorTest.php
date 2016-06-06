@@ -93,18 +93,16 @@ class TableGeneratorTest extends GeneratorTestCase
 
         $report = $this->generate($collection, [
             'iterations' => true,
-            'cols' => ['time', 'z-value', 'rej', 'iter', 'revs'],
+            'cols' => ['time', 'comp_z_value', 'iter', 'revs'],
         ]);
         $this->assertXPathCount($report, 1, '//table');
         $this->assertXPathCount($report, 8, '//row');
         $this->assertXPathEval($report, 2, 'number(//row[1]//cell[@name="time"])');
-        $this->assertXPathEval($report, -1, 'number(//row[1]//cell[@name="z-value"])');
-        $this->assertXPathEval($report, 0, 'number(//row[1]//cell[@name="rej"])');
+        $this->assertXPathEval($report, -1, 'number(//row[1]//cell[@name="comp_z_value"])');
         $this->assertXPathEval($report, 0, 'number(//row[1]//cell[@name="iter"])');
 
         $this->assertXPathEval($report, 4, 'number(//row[2]//cell[@name="time"])');
-        $this->assertXPathEval($report, 1, 'number(//row[2]//cell[@name="z-value"])');
-        $this->assertXPathEval($report, 0, 'number(//row[2]//cell[@name="rej"])');
+        $this->assertXPathEval($report, 1, 'number(//row[2]//cell[@name="comp_z_value"])');
         $this->assertXPathEval($report, 1, 'number(//row[2]//cell[@name="iter"])');
     }
 

@@ -140,14 +140,12 @@ class XmlEncoder
                 // if there is only one metric, use the key as the attribute name.
                 if (count($metrics) === 1) {
                     $iterationEl->setAttribute(
-                        str_replace('_', '-', $prefix)
-                    , current($metrics));
+                        str_replace('_', '-', $prefix), current($metrics));
                     continue;
                 }
 
                 // otherwise concatenate the result key and the metric key.
                 foreach ($metrics as $key => $value) {
-
                     $iterationEl->setAttribute(sprintf(
                         '%s-%s',
                         $prefix,
@@ -170,8 +168,6 @@ class XmlEncoder
             $resultEl = $subjectEl->queryOne('ancestor::suite')->appendElement('result');
             $resultEl->setAttribute('key', $resultKey);
             $resultEl->setAttribute('class', $classFqn);
-
-
         }
     }
 

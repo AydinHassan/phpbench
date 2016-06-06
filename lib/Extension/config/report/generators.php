@@ -17,7 +17,7 @@ return [
     'default' => [
         'generator' => 'table',
         'iterations' => true,
-        'cols' => ['benchmark', 'subject', 'groups', 'params', 'revs', 'iter', 'rej', 'mem', 'iter', 'time', 'z-value', 'diff'],
+        'cols' => ['benchmark', 'subject', 'groups', 'params', 'revs', 'iter', 'mem', 'iter', 'time', 'comp_z_value', 'comp_deviation'],
         'diff_col' => 'time',
     ],
     'compare' => [

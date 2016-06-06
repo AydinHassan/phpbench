@@ -18,14 +18,14 @@ use PhpBench\Model\Error;
 use PhpBench\Model\ErrorStack;
 use PhpBench\Model\Iteration;
 use PhpBench\Model\ParameterSet;
+use PhpBench\Model\Result\ComputedResult;
+use PhpBench\Model\Result\MemoryResult;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\ResultCollection;
 use PhpBench\Model\Subject;
 use PhpBench\Model\Suite;
 use PhpBench\Model\SuiteCollection;
 use PhpBench\Model\Variant;
-use PhpBench\Model\ResultCollection;
-use PhpBench\Model\Result\TimeResult;
-use PhpBench\Model\Result\MemoryResult;
-use PhpBench\Model\Result\ComputedResult;
 
 class XmlTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -107,7 +107,7 @@ class XmlTestCase extends \PHPUnit_Framework_TestCase
             new ResultCollection([
                 new TimeResult(10),
                 new MemoryResult(100),
-                new ComputedResult(0, 0, 5)
+                new ComputedResult(0, 0, 5),
             ])
         );
 

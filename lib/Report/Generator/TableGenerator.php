@@ -41,7 +41,8 @@ class TableGenerator implements GeneratorInterface, OutputAwareInterface
         'rstdev' => ['percentage'],
         'mem' => ['mem'],
         'diff' => ['diff'],
-        'z-value' => ['z-value'],
+        'comp_deviation' => ['diff'],
+        'comp_z_value' => ['z-value'],
     ];
 
     /**
@@ -460,9 +461,27 @@ class TableGenerator implements GeneratorInterface, OutputAwareInterface
                         foreach ($variant->getIterations() as $index => $iteration) {
                             $row = clone $row;
                             $row['iter'] = $index;
-                            $row['rej'] = $iteration->getRejectionCount();
-                            $row['time'] = $iteration->getRevTime();
-                            $row['z-value'] = $iteration->getZValue();
+                            foreach ($iteration->getResults() as $result) {
+                                $metrics = $result->toArray();
+                                if (count($metrics) === 1) {
+
+                                    // special case: time should be reported as the revolution time.
+                                    // TODO: We could pass the nb. revolutions to the TimeResult
+                                    if ($result->getKey() === 'time') {
+                                        $row[$result->getKey()] = current($metrics) / $variant->getRevolutions();
+                                        continue;
+                                    }
+
+                                    // we only have one value, set it using the result key.
+                                    $row[$result->getKey()] = current($metrics);
+                                    continue;
+                                }
+
+                                // otherwise prefix the metric key with the result key.
+                                foreach ($metrics as $key => $value) {
+                                    $row[$result->getKey() . '_' . $key] = $value;
+                                }
+                            }
                             $table[] = $row;
                         }
                     }
