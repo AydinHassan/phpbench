@@ -17,6 +17,8 @@ use PhpBench\Model\Subject;
 use PhpBench\Model\Variant;
 use PhpBench\Tests\Util\TestUtil;
 use Prophecy\Argument;
+use PhpBench\Model\Result\TimeResult;
+use PhpBench\Model\Result\MemoryResult;
 
 class VariantTest extends \PHPUnit_Framework_TestCase
 {
@@ -212,10 +214,10 @@ class VariantTest extends \PHPUnit_Framework_TestCase
         $variant[0]->setResults(TestUtil::createResultCollection(4, 100));
         $variant[1]->setResults(TestUtil::createResultCollection(8, 200));
 
-        $times = $variant->getTimes();
-        $memories = $variant->getMemories();
+        $times = $variant->getMetricValuesByRev(TimeResult::class, 'time');
+        $memories = $variant->getMetricValues(MemoryResult::class, 'memory');
 
-        $this->assertEquals([4, 8], $variant->getTimes());
-        $this->assertEquals([100, 200], $variant->getMemories());
+        $this->assertEquals([4, 8], $times);
+        $this->assertEquals([100, 200], $memories);
     }
 }

@@ -122,7 +122,7 @@ class Iteration
      * Return the time taken (in microseconds) to perform this iteration (or
      * NULL if not yet performed.
      *
-     * TODO: Remove this method
+     * Convenience method.
      *
      * @return int
      */
@@ -134,7 +134,7 @@ class Iteration
     /**
      * Return the revolution time.
      *
-     * TODO: Remove this method.
+     * Convenience method.
      *
      * @return float
      */

@@ -14,7 +14,7 @@ namespace PhpBench\Model\Result;
 use PhpBench\Model\ResultInterface;
 
 /**
- * Represents the result of a single iteration executed by an executor.
+ * Represents the net time taken by a single iteration (all revolutions).
  */
 class TimeResult implements ResultInterface
 {
@@ -50,7 +50,7 @@ class TimeResult implements ResultInterface
     public function toArray()
     {
         return [
-            'net-time' => $this->time,
+            'time' => $this->time,
         ];
     }
 

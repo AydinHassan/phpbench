@@ -21,6 +21,7 @@ use PhpBench\Report\Generator\Table\Row;
 use PhpBench\Report\Generator\Table\Sort;
 use PhpBench\Report\GeneratorInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use PhpBench\Model\Result\MemoryResult;
 
 /**
  * The table generator generates reports about benchmarking results.
@@ -403,7 +404,7 @@ class TableGenerator implements GeneratorInterface, OutputAwareInterface
                             'params' => json_encode($variant->getParameterSet()->getArrayCopy(), $paramJsonFlags),
                             'revs' => $variant->getRevolutions(),
                             'its' => count($variant->getIterations()),
-                            'mem' => Statistics::mean($variant->getMemories()),
+                            'mem' => Statistics::mean($variant->getMetricValues(MemoryResult::class, 'memory')),
                         ]);
 
                         // the formatter params are passed to the Formatter and
